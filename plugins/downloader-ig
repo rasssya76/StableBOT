@@ -1,0 +1,71 @@
+import { instagram } from "@xct007/frieren-scraper";
+const axios = await import("axios")
+import fetch from 'node-fetch'
+let handler = async (m, { conn, args, usedPrefix, command, text }) => {
+    if (!args[0]) throw `Use example ${usedPrefix}${command} https://www.instagram.com/p/ByxKbUSnubS/?utm_source=ig_web_copy_link`
+    try{
+    await m.reply(wait)     
+if (!args[0].match(/https:\/\/www.instagram.com\/(p|reel|tv)/gi)) return m.reply( `*Link salah! Perintah ini untuk mengunduh postingan ig/reel/tv, bukan untuk highlight/story!*\n\ncontoh:\n${usedPrefix + command} https://www.instagram.com/p/BmjK1KOD_UG/?utm_medium=copy_link`)
+const data = await instagram.v1(text)
+let igreel = text.includes("https://www.instagram.com/reel/")
+for (let url of data) {
+const res = await fetch(url.url)
+const buff = Buffer.from(await res.arrayBuffer())
+sendMedia(m.chat, buff, m, {caption: "*╌╌「 SUCCES 」╌╌*"})
+  }
+  } catch(e) {
+  console.log(e)
+  m.reply(`🚩 Error Dalam pengunduhan data`)
+  }
+}
+handler.help = ['ig'].map(v => v + ' <url>')
+handler.tags = ['downloader']
+
+handler.command = /^(ig(dl)?)$/i
+
+export default handler
+
+async function getFile(PATH, returnAsFilename) {
+let res, filename
+let data = Buffer.isBuffer(PATH) ? PATH : /^data:.*?\/.*?;base64,/i.test(PATH) ? Buffer.from(PATH.split`,`[1], 'base64') : /^https?:\/\//.test(PATH) ? await (res = await fetch(PATH)).buffer() : fs.existsSync(PATH) ? (filename = PATH, fs.readFileSync(PATH)) : typeof PATH === 'string' ? PATH : Buffer.alloc(0)
+if (!Buffer.isBuffer(data)) throw new TypeError('Result is not a buffer')
+let type = await fromBuffer(data) || {
+mime: 'application/octet-stream',
+ext: '.bin'
+}
+if (data && returnAsFilename && !filename) (filename = path.join(__dirname,  '../' +new Date * 1 + '.' + type.ext), await fs.promises.writeFile(filename, data))
+return {
+res,
+filename,
+...type,
+data
+}
+}
+
+async function sendMedia(jid, path, quoted, options) {
+let { ext, mime, data } = await conn.getFile(path)
+let messageType = mime.split("/")[0]
+let pase = messageType.replace('application', 'document') || messageType
+return await conn.sendMessage(jid, { [`${pase}`]: data, mimetype: mime, ...options }, { quoted })
+      }
+
+const fetchUrl = async (url, options) => {
+    try {
+        options ? options : {}
+        const res = await axios({
+            method: 'GET',
+            url: url,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
+            },
+            ...options
+        })
+        return res.data
+    } catch (err) {
+        return err
+    }
+}
+
+const isUrl = async (url) => {
+    return url.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/, 'gi'))
+}

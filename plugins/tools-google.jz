@@ -1,0 +1,23 @@
+import { googleIt } from '@bochilteam/scraper'
+let imgr = flaaa.getRandom()
+let handler = async (m, { conn, text, command }) => {
+    if (!text) throw 'Input Query'
+    let search = await googleIt.googleIt(text)
+    let msg = search.articles.map((v) => `*${v.title}*\n_${v.url}_\n_${v.description}_`).join('\n\n')
+    if (!msg.length) throw 'Not Found :/'
+    conn.sendMessage(m.chat, {
+    text: msg,
+    contextInfo: {
+    externalAdReply: {
+    title: me,
+    thumbnailUrl: `${imgr + command}`,
+    mediaType: 1,
+    renderLargerThumbnail: true
+    }}}, { quoted: m})
+     //m.reply(msg)
+}
+handler.help = handler.alias = ['google']
+handler.tags = ['tools']
+handler.command = /^google$/i
+
+export default handler
